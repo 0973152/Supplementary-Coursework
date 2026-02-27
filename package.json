@@ -1,0 +1,43 @@
+{
+  "name": "task-manager-template",
+  "version": "1.0.0",
+  "description": "Simple Task Manager Template for Supplementary Assessment",
+  "main": "dist/server/server.js",
+  "scripts": {
+    "erd": "erd-ui database/erd.txt",
+    "setup": "ts-node server/setup.ts",
+    "start": "ts-node-dev server/main.ts",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@beenotung/better-sqlite3-helper": "^4.1.9",
+    "better-sqlite3": "^12.6.2",
+    "better-sqlite3-schema": "^3.1.10",
+    "cors": "^2.8.5",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.10.0",
+    "quick-erd": "^4.32.0",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.3.3"
+  },
+  "keywords": [
+    "task-manager",
+    "supplementary-assessment",
+    "nodejs",
+    "typescript",
+    "sqlite"
+  ],
+  "author": "Template for HKCT Software Engineering Course",
+  "license": "MIT",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "better-sqlite3"
+    ]
+  }
+}
