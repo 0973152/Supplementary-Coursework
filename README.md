@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Task Manager Template - Supplementary Assessment
 
 ## Overview
@@ -471,3 +472,6 @@ async function loadTasks() {
 ---
 
 **Remember:** This template gives you a head start, but you must demonstrate your understanding by completing and modifying the code. Good luck! 🚀
+=======
+# Supplementary-Coursework
+>>>>>>> fd5ef3aa388499f1224e3d0f273ed7ceb0f0f278
