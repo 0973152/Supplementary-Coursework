@@ -19,4 +19,14 @@ if (!tableCheck) {
     const schemaSql = fs.readFileSync(schemaPath, 'utf8');
     db.exec(schemaSql);
     console.log('Schema created successfully.');
+
+    const sampleDataPath = path.join(process.cwd(), 'database', 'sample-data.sql');
+    if (fs.existsSync(sampleDataPath)) {
+        console.log('Inserting sample data...');
+        const sampleSql = fs.readFileSync(sampleDataPath, 'utf8');
+        db.exec(sampleSql);
+        console.log('Sample data inserted.');
+    } else {
+        console.log('sample-data.sql not found, skipping sample data.');
+    }
 }
