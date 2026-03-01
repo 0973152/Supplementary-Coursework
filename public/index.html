@@ -16,7 +16,7 @@
     </header>
 
     <main>
-      <!-- Category Management (shown first) -->
+      <!-- Category Management -->
       <section class="category-management">
         <h3>Categories</h3>
 
@@ -47,15 +47,25 @@
           </div>
         </div>
       </section>
+
       <!-- Add Task Form -->
       <section class="add-task">
         <h2>Add New Task</h2>
-        <div class="category-filter">
-          <label for="category-filter">Select Category:</label>
-          <select id="category-filter">
-            <option value="">Loading categories...</option>
-          </select>
+        <div class="filter-row">
+          <div class="category-filter">
+            <label for="category-filter">Category:</label>
+            <select id="category-filter">
+              <option value="">All Categories</option>
+            </select>
+          </div>
+          <div class="priority-filter">
+            <label for="priority-filter">Priority:</label>
+            <select id="priority-filter">
+              <option value="">All Priorities</option>
+            </select>
+          </div>
         </div>
+
         <form id="task-form">
           <div class="form-group">
             <label for="title">Title *</label>
@@ -74,7 +84,6 @@
             <label for="priority">Priority</label>
             <select id="priority" name="priority_id">
               <option value="">-- Select Priority (optional) --</option>
-              <!-- Options will be loaded dynamically by JavaScript -->
             </select>
           </div>
 
@@ -90,15 +99,22 @@
         </form>
       </section>
 
-      <button type="submit" class="btn btn-primary" id="add-task-btn" disabled>Add Task to Selected
-        Category</button>
-      </form>
-      </section>
-
+      <!-- Task List Section with Batch Operations -->
       <section class="task-list">
-        <h2 id="task-list-title">All Tasks</h2>
+        <div class="task-list-header">
+          <h2 id="task-list-title">All Tasks</h2>
+          <div class="batch-actions">
+            <label>
+              <input type="checkbox" id="select-all-tasks"> Select All
+            </label>
+            <select id="batch-priority">
+              <option value="">Change Priority...</option>
+            </select>
+            <button id="apply-batch-priority" class="btn btn-secondary btn-sm">Apply</button>
+          </div>
+        </div>
+
         <div id="tasks-container">
-          <!-- Tasks will be loaded here dynamically -->
           <p>Loading tasks...</p>
         </div>
       </section>

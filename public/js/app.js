@@ -2,6 +2,7 @@
 let loadedCategories = [];
 let loadedPriorities = [];
 let currentCategoryFilter = '';
+let currentPriorityFilter = ''; // For priority filtering
 
 // ==================== Initialization ====================
 async function init() {
@@ -9,6 +10,8 @@ async function init() {
     await loadPriorities();
     await loadTasks();
     setupCategoryFilter();
+    setupPriorityFilter();
+    setupBatchActions();
 
     document.getElementById('task-form').addEventListener('submit', handleTaskSubmit);
     document.getElementById('category-form').addEventListener('submit', handleCategorySubmit);
@@ -21,22 +24,37 @@ async function loadPriorities() {
         const result = await response.json();
         if (result.error) throw new Error(result.error);
         loadedPriorities = result.priorities;
-        populatePriorityDropdown();
+        populatePriorityDropdown('priority');
+        populatePriorityDropdown('priority-filter');
+        populateBatchPriorityDropdown();
     } catch (error) {
         console.error('Error loading priorities:', error);
     }
 }
 
-function populatePriorityDropdown(selectElementId = 'priority') {
+function populatePriorityDropdown(selectElementId) {
     const select = document.getElementById(selectElementId);
     if (!select) return;
-    select.innerHTML = '<option value="">-- Select Priority (optional) --</option>';
+    const firstOption = select.options[0] ? select.options[0].outerHTML : '<option value="">-- Select Priority --</option>';
+    select.innerHTML = firstOption;
     loadedPriorities.forEach(p => {
         const option = document.createElement('option');
         option.value = p.id;
         option.textContent = p.name;
         option.style.backgroundColor = p.color;
         option.style.color = '#fff';
+        select.appendChild(option);
+    });
+}
+
+function populateBatchPriorityDropdown() {
+    const select = document.getElementById('batch-priority');
+    if (!select) return;
+    select.innerHTML = '<option value="">Change Priority...</option>';
+    loadedPriorities.forEach(p => {
+        const option = document.createElement('option');
+        option.value = p.id;
+        option.textContent = p.name;
         select.appendChild(option);
     });
 }
@@ -52,7 +70,13 @@ async function loadTasks() {
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const result = await response.json();
         if (result.error) throw new Error(result.error);
-        displayTasks(result.tasks);
+
+        let tasks = result.tasks;
+        // Apply priority filter on frontend (backend doesn't support it yet)
+        if (currentPriorityFilter) {
+            tasks = tasks.filter(t => t.priority_id == currentPriorityFilter);
+        }
+        displayTasks(tasks);
     } catch (error) {
         console.error('Error loading tasks:', error);
         document.getElementById('tasks-container').innerHTML = '<p>Error loading tasks. Please try again later.</p>';
@@ -75,17 +99,14 @@ function createTaskHtml(task) {
         ? `<span class="task-category" style="background-color: ${category.color}; color: white; padding: 2px 6px; border-radius: 10px; font-size: 0.8em;">${category.name}</span>`
         : '<span class="task-category-placeholder">No category</span>';
 
-    // Priority tag (requires backend to return priority_name and priority_color)
     const priorityTag = task.priority_name
         ? `<span class="priority-tag" style="background-color: ${task.priority_color};">${task.priority_name}</span>`
         : '';
 
-    // Description (short preview)
     const descriptionHtml = task.description
         ? `<div class="task-description">${task.description.substring(0, 50)}${task.description.length > 50 ? '…' : ''}</div>`
         : '';
 
-    // Due date
     const dueDateHtml = task.due_date
         ? `<span class="due-date">Due: ${new Date(task.due_date).toLocaleString()}</span>`
         : '';
@@ -97,18 +118,23 @@ function createTaskHtml(task) {
 
     return `
         <div class="task-item ${task.status}" data-id="${task.id}">
-            <div class="task-title">${task.title}</div>
-            ${descriptionHtml}
-            <div class="task-meta">
-                <span class="task-status status-${task.status}">${task.status.replace('_', ' ')}</span>
-                ${statusButtons ? `<div class="quick-status-actions">${statusButtons}</div>` : ''}
-                ${priorityTag}
-                ${dueDateHtml}
-                ${categoryHtml}
+            <div class="task-select-wrapper">
+                <input type="checkbox" class="task-select" value="${task.id}">
             </div>
-            <div class="task-actions">
-                <button class="btn btn-secondary btn-sm" onclick="editTask(${task.id})">Edit</button>
-                <button class="btn btn-danger btn-sm" onclick="deleteTask(${task.id}, '${task.title.replace(/'/g, "\\'")}')">Delete</button>
+            <div class="task-content">
+                <div class="task-title">${task.title}</div>
+                ${descriptionHtml}
+                <div class="task-meta">
+                    <span class="task-status status-${task.status}">${task.status.replace('_', ' ')}</span>
+                    ${statusButtons ? `<div class="quick-status-actions">${statusButtons}</div>` : ''}
+                    ${priorityTag}
+                    ${dueDateHtml}
+                    ${categoryHtml}
+                </div>
+                <div class="task-actions">
+                    <button class="btn btn-secondary btn-sm" onclick="editTask(${task.id})">Edit</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteTask(${task.id}, '${task.title.replace(/'/g, "\\'")}')">Delete</button>
+                </div>
             </div>
         </div>
     `;
@@ -211,7 +237,7 @@ async function editTask(taskId) {
             <div class="form-row">
                 <div class="form-group">
                     <label>Due Date</label>
-                    <input type="datetime-local" name="due_date" value="${task.due_date ? task.due_date.slice(0,16) : ''}">
+                    <input type="datetime-local" name="due_date" value="${task.due_date ? task.due_date.slice(0, 16) : ''}">
                 </div>
             </div>
             <div class="form-actions">
@@ -225,7 +251,7 @@ async function editTask(taskId) {
         taskItem.innerHTML = '';
         taskItem.appendChild(editForm);
 
-        editForm.addEventListener('submit', async function(e) {
+        editForm.addEventListener('submit', async function (e) {
             e.preventDefault();
             const formData = new FormData(e.target);
             const updateData = {
@@ -357,7 +383,7 @@ async function editCategory(categoryId, currentName, currentColor) {
     categoryItem.innerHTML = '';
     categoryItem.appendChild(editForm);
 
-    editForm.addEventListener('submit', async function(e) {
+    editForm.addEventListener('submit', async function (e) {
         e.preventDefault();
         const formData = new FormData(e.target);
         const updateData = {
@@ -405,11 +431,11 @@ async function deleteCategory(categoryId, categoryName) {
     }
 }
 
-// ==================== Other Functions ====================
+// ==================== Filter & Batch Functions ====================
 function setupCategoryFilter() {
     const categoryFilter = document.getElementById('category-filter');
     const addTaskBtn = document.getElementById('add-task-btn');
-    categoryFilter.addEventListener('change', function() {
+    categoryFilter.addEventListener('change', function () {
         currentCategoryFilter = this.value;
         loadTasks();
         addTaskBtn.disabled = !currentCategoryFilter;
@@ -418,6 +444,68 @@ function setupCategoryFilter() {
     });
     addTaskBtn.disabled = true;
     addTaskBtn.textContent = 'Select a Category First';
+}
+
+function setupPriorityFilter() {
+    const priorityFilter = document.getElementById('priority-filter');
+    if (!priorityFilter) return;
+    priorityFilter.addEventListener('change', function () {
+        currentPriorityFilter = this.value;
+        loadTasks();
+    });
+}
+
+function setupBatchActions() {
+    const selectAllCheckbox = document.getElementById('select-all-tasks');
+    const applyBtn = document.getElementById('apply-batch-priority');
+    const batchPrioritySelect = document.getElementById('batch-priority');
+
+    if (selectAllCheckbox) {
+        selectAllCheckbox.addEventListener('change', function () {
+            const taskCheckboxes = document.querySelectorAll('.task-select');
+            taskCheckboxes.forEach(cb => cb.checked = selectAllCheckbox.checked);
+        });
+    }
+
+    if (applyBtn && batchPrioritySelect) {
+        applyBtn.addEventListener('click', async function () {
+            const selectedPriority = batchPrioritySelect.value;
+            if (!selectedPriority) {
+                alert('Please select a priority to apply');
+                return;
+            }
+
+            const selectedTaskIds = Array.from(document.querySelectorAll('.task-select:checked'))
+                .map(cb => cb.value);
+
+            if (selectedTaskIds.length === 0) {
+                alert('Please select at least one task');
+                return;
+            }
+
+            applyBtn.disabled = true;
+            applyBtn.textContent = 'Applying...';
+
+            try {
+                const promises = selectedTaskIds.map(id =>
+                    fetch(`/api/tasks/${id}`, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ priority_id: selectedPriority })
+                    })
+                );
+                await Promise.all(promises);
+                await loadTasks();
+                if (selectAllCheckbox) selectAllCheckbox.checked = false;
+            } catch (error) {
+                console.error('Error applying batch priority:', error);
+                alert('Failed to update some tasks. Please try again.');
+            } finally {
+                applyBtn.disabled = false;
+                applyBtn.textContent = 'Apply';
+            }
+        });
+    }
 }
 
 function updateTaskListTitle() {
@@ -432,6 +520,7 @@ function updateTaskListTitle() {
     }
 }
 
+// ==================== Other Functions ====================
 async function changeTaskStatus(taskId, newStatus) {
     try {
         const response = await fetch(`/api/tasks/${taskId}`, {
