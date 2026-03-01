@@ -1,24 +1,19 @@
 # AI Usage Declaration
 
 ## Student Information
-- **Name:** [Your Full Name]
-- **Student ID:** [Your Student ID]
+- **Name:** [Lam Tsz Kin]
+- **Student ID:** [23814272]
 - **Project:** Task Manager Supplementary Assessment
 
 ## AI Tools Used
 
-**Did you use any AI tools?** [ ] Yes [ ] No
+**Did you use any AI tools?**  Yes 
 
 If yes, list them below:
 
-1. **Tool Name:** [e.g., ChatGPT, Claude, GitHub Copilot, Daobao, DeepSeek, Poe]
-   - **Purpose:** [Brief description - e.g., "helped debug database queries"]
-   - **Usage:** [Brief description - e.g., "used for 2-3 specific questions"]
-
-2. **Tool Name:** [if applicable]
-   - **Purpose:**
-   - **Usage:**
-
+1. **Tool Name:** [DeepSeek]
+   - **Purpose:** [Add annotations]
+   - **Usage:** [Let AI generate appropriate annotations]
 ## Declaration
 
 I declare that:
@@ -28,8 +23,8 @@ I declare that:
 - I understand the code I submitted and can explain how it works
 - I have not used AI tools to generate the entire assignment
 
-**Date:** [YYYY-MM-DD]
-**Signature:** [Your Name]
+**Date:** [2026-03-01]
+**Signature:** [Lam Tsz KIn]
 
 ---
 
