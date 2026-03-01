@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Task Manager Template - Supplementary Assessment
 
 ## Overview
@@ -8,7 +7,7 @@ This template provides a **comprehensive working foundation** for your Multi-Tab
 **Database Structure:**
 - ✅ **Task Table** - Working category relationships (id, title, status, category_id)
 - ✅ **Category Table** - Basic structure (id, name, color)
-- 🔧 **Priority Table** - You design and create this table from scratch
+- ✅ **Priority Table** - You design and create this table from scratch
 - ✅ **Foreign Keys** - Category relationships working, you implement priority relationships
 
 **Backend & API:**
@@ -27,10 +26,10 @@ This template provides a **comprehensive working foundation** for your Multi-Tab
   - ✅ DELETE /api/categories/:id - Delete categories (with foreign key protection)
 
   **Priority API (Student Implementation):**
-  - 🔧 GET /api/priorities - You design and implement
-  - 🔧 POST /api/priorities - You design and implement
-  - 🔧 PATCH /api/priorities/:id - You design and implement
-  - 🔧 DELETE /api/priorities/:id - You design and implement
+  - ✅ GET /api/priorities - You design and implement
+  - ✅ POST /api/priorities - You design and implement
+  - ✅ PATCH /api/priorities/:id - You design and implement
+  - ✅ DELETE /api/priorities/:id - You design and implement
 
 **Frontend:**
 - ✅ Working HTML interface with category filtering
@@ -42,9 +41,9 @@ This template provides a **comprehensive working foundation** for your Multi-Tab
 - ✅ Basic CSS styling and JavaScript functions
 
   **Priority Features (Student Implementation):**
-  - 🔧 Priority dropdown in task forms
-  - 🔧 Priority display and filtering
-  - 🔧 Extended form validation for priority fields
+  - ✅ Priority dropdown in task forms
+  - ✅ Priority display and filtering
+  - ✅ Extended form validation for priority fields
 
 **Important:** This template provides a complete working foundation with full CRUD operations. Focus on extending the database schema (add priority table, description fields, etc.) and enhancing the UI/UX as needed.
 
@@ -472,6 +471,3 @@ async function loadTasks() {
 ---
 
 **Remember:** This template gives you a head start, but you must demonstrate your understanding by completing and modifying the code. Good luck! 🚀
-=======
-# Supplementary-Coursework
->>>>>>> fd5ef3aa388499f1224e3d0f273ed7ceb0f0f278

@@ -58,12 +58,6 @@
               <option value="">All Categories</option>
             </select>
           </div>
-          <div class="priority-filter">
-            <label for="priority-filter">Priority:</label>
-            <select id="priority-filter">
-              <option value="">All Priorities</option>
-            </select>
-          </div>
         </div>
 
         <form id="task-form">
@@ -102,7 +96,15 @@
       <!-- Task List Section with Batch Operations -->
       <section class="task-list">
         <div class="task-list-header">
-          <h2 id="task-list-title">All Tasks</h2>
+          <div style="display: flex; align-items: center; gap: 1rem;">
+            <h2 id="task-list-title">All Tasks</h2>
+            <div class="priority-filter">
+              <label for="priority-filter">Priority:</label>
+              <select id="priority-filter">
+                <option value="">All Priorities</option>
+              </select>
+            </div>
+          </div>
           <div class="batch-actions">
             <label>
               <input type="checkbox" id="select-all-tasks"> Select All
